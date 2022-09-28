@@ -14,14 +14,14 @@ void setup()
   pinMode(6, OUTPUT);
   pinMode(5, OUTPUT);
   pinMode(4, OUTPUT);
-  pinMode(BTN_PAUSA, INPUT_PULLUP);	
-  pinMode(BTN_REINICIO, INPUT_PULLUP);	
+  pinMode(BTN_PAUSA, INPUT_PULLUP);
+  pinMode(BTN_REINICIO, INPUT_PULLUP);
 }
 
 int segundos;
 int cronometro = 0;
 int estadoBotonAnterior = LOW;
-int segundosAntes = -1;
+int segundosAntes = millis()-1;
 int estadoCircuito;
 
 void loop()
@@ -36,100 +36,73 @@ void loop()
       estadoCircuito = LOW;
     }
   }
-  
+
   if(digitalRead(BTN_REINICIO) == 1){
   cronometro = 0;
   }
-  
+
   if(estadoCircuito == HIGH){
   if(segundos != segundosAntes){
     cronometro = cronometro + 1;
     segundosAntes = segundos;
-	//delay(50);
-    int millisUno = millis();
-    int millisDos = millisUno;
-    while(millisDos-millisUno < 500){
-    	millisDos=millis();
-    }
+    delayConMillis(50);
     }
   }
-  
-  //led 1 se prende por segundo
-    if(cronometro % 2 == 1){
-      digitalWrite(4, HIGH);
-    }else{
-      digitalWrite(4, LOW);
-    }
 
+    //led 1 se prende por segundo
+    encenderLed(4, 2, 0, cronometro);
     //led 2 se prende cada 2 segundos
-    if(cronometro % 4 > 1){
-      digitalWrite(5, HIGH);
-    }else{
-      digitalWrite(5, LOW);
-    }
-
+    encenderLed(5, 4, 1, cronometro);
     //led 3 cada 4 segs
-    if(cronometro % 8 > 3){
-      digitalWrite(6, HIGH);
-    }else{
-      digitalWrite(6, LOW);
-    }
-
+    encenderLed(6, 8, 3, cronometro);
     //led 4 cada 8 segs
-    if(cronometro % 16 > 7){
-      digitalWrite(7, HIGH);
-    }else{
-      digitalWrite(7, LOW);
-    }
-
+    encenderLed(7, 16, 7, cronometro);
     //led 5 cada 16 segs
-    if(cronometro % 32 > 15){
-      digitalWrite(8, HIGH);
-    }else{
-      digitalWrite(8, LOW);
-    }
-
+    encenderLed(8, 32, 15, cronometro);
     //led 6 cada 32 segs
-    if(cronometro % 64 > 31){
-      digitalWrite(9, HIGH);
-    }else{
-      digitalWrite(9, LOW);
-    }
-
+    encenderLed(9, 64, 31, cronometro);
     //led 7 cada 64 segs
-    if(cronometro % 128 > 63){
-      digitalWrite(10, HIGH);
-    }else{
-      digitalWrite(10, LOW);
-    }
-
+    encenderLed(10, 128, 63, cronometro);
     //led 8 cada 128 segs
-    if(cronometro % 256 > 127){
-      digitalWrite(11, HIGH);
-    }else{
-      digitalWrite(11, LOW);
-    }  
-
+    encenderLed(11, 256, 127, cronometro);
     //led 9 cada 256 segs
-    if(cronometro % 512 > 255){
-      digitalWrite(12, HIGH);
-    }else{
-      digitalWrite(12, LOW);
-    }
-
+    encenderLed(12, 512, 255, cronometro);
     //led 10 cada 512 segs
-    if(cronometro % 1024 > 511){
-      digitalWrite(13, HIGH);
-    }else{
-      digitalWrite(13, LOW);
-    }
-  
+    encenderLed(13, 1024, 511, cronometro);
+
   estadoBotonAnterior = botonAhora;
-  
-  //delay(50);
-   int millisUno = millis();
-   int millisDos = millisUno;
-   while(millisDos-millisUno < 50){
-    	millisDos=millis();
-	}
+
+  delayConMillis(50);
+}
+
+
+/**
+ * @fn void encenderLed(int, int, int, int)
+ * @brief enciende el led indicado con la frecuencia correspondiente al resultado del resto entre el cronómetro y el número parametrizado
+ * 
+ * @param numeroLed numero de led a encender o apagar
+ * @param resto	numero al que calcular el resto
+ * @param menorA numero que define cuándo, tras calcular el resto, se encenderá o apagará el led
+ * @param cronometro variable de cronometro a la que se le calcula el resto
+ */
+void encenderLed(int numeroLed, int resto, int menorA, int cronometro){
+	  if(cronometro % resto > menorA){
+	      digitalWrite(numeroLed, HIGH);
+	    }else{
+	      digitalWrite(numeroLed, LOW);
+	    }
+  }
+
+/**
+ * @fn void delayConMillis(int)
+ * @brief permite generar un delay pero utilizando la función millis en su lugar
+ * 
+ * @param cantidad tiempo de delay en milisegundos 
+ */
+void delayConMillis(int cantidad){
+	   int millisUno = millis();
+	   int millisDos = millisUno;
+	   while(millisDos-millisUno < 50){
+	    	millisDos=millis();
+		}
 }
